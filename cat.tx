@@ -1,0 +1,69 @@
+def initialize_inventory(products):
+    inventory = {}
+    for product in products:
+        while True:
+            try:
+                quantity = int(input(f"Enter the quantity of {product}s available: "))
+                if quantity < 0:
+                    raise ValueError("Quantity cannot be negative.")
+                inventory[product] = quantity
+                break
+            except ValueError as e:
+                print(f"Error: {e}. Please enter a valid non-negative number.")
+    return inventory
+
+
+def calculate_total_price(product):
+    while True:
+        try:
+            price = float(input(f"Enter the price for one {product}: "))
+            if price < 0:
+                raise ValueError("Price cannot be negative.")
+            return price
+        except ValueError as e:
+            print(f"Error: {e}. Please enter a valid non-negative number.")
+
+def get_customer_orders(inventory):
+    orders = {}
+    while True:
+        try:
+            num_orders = int(input("How many products would the customer like to order? "))
+            if num_orders < 0:
+                raise ValueError("Number of orders cannot be negative.")
+            break
+        except ValueError as e:
+            print(f"Error: {e}. Please enter a valid non-negative number.")
+
+    for _ in range(num_orders):
+        while True:
+            product = input("Enter the product name: ").strip().lower()
+            if product not in inventory:
+                print("Error: Product not found in inventory. Please try again.")
+            elif inventory[product] <= 0:
+                print("Error: Product is out of stock. Please choose another product.")
+            else:
+                orders[product] = orders.get(product, 0) + 1
+                inventory[product] -= 1  # Decrease stock
+                break
+    return orders
+
+ef main():
+    products = ["t-shirt", "mug", "hat","book","keychain"]
+    inventory = initialize_inventory(products)
+
+    prices = {}
+    for product in products:
+        prices[product] = calculate_total_price(product)
+
+    orders = get_customer_orders(inventory)
+
+    total_cost = sum(prices[product] * quantity for product, quantity in orders.items())
+
+    print("\nOrder Summary:")
+    for product, quantity in orders.items():
+        print(f"{product.title()} x {quantity} = ${prices[product] * quantity:.2f}")
+    print(f"Total cost: ${total_cost:.2f}")
+
+
+# Run the program
+main()
